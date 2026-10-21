@@ -1,21 +1,109 @@
 @import "tailwindcss";
 
-/* M.REE brand tokens — use as bg-navy-900, text-brand-500, etc. */
+/* Enable class-based dark mode: toggle `class="dark"` on <html>. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* M.REE brand tokens ---------------------------------------------------- */
 @theme {
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-display: "Montserrat", "Inter", ui-sans-serif, sans-serif;
 
+  /* Deep Midnight — dark-mode canvas */
+  --color-midnight-950: #020617;
+  --color-midnight-900: #050b1f;
+  --color-midnight-800: #0a1428;
+  --color-midnight-700: #142040;
+  --color-midnight-600: #1e2a5c;
+
+  /* Navy — light-mode brand */
   --color-navy-950: #050d1f;
   --color-navy-900: #0a1a3a;
   --color-navy-800: #0f2552;
   --color-navy-700: #163370;
   --color-navy-600: #1e4494;
 
-  --color-brand-300: #ffd166;
-  --color-brand-400: #ffbe2e;
-  --color-brand-500: #f9a613;
-  --color-brand-600: #f08a00;
+  /* Rich Gold / Amber — accent for both modes */
+  --color-gold-200: #fde68a;
+  --color-gold-300: #fcd34d;
+  --color-gold-400: #fbbf24;
+  --color-gold-500: #f59e0b;
+  --color-gold-600: #d97706;
+  --color-gold-700: #b45309;
+
+  /* Legacy aliases so older `brand-*` classes keep working */
+  --color-brand-300: #fcd34d;
+  --color-brand-400: #fbbf24;
+  --color-brand-500: #f59e0b;
+  --color-brand-600: #d97706;
+
+  /* Cream — light-mode warm neutral */
+  --color-cream-50: #fffdf7;
+  --color-cream-100: #fef9ec;
 }
 
-html { scroll-behavior: smooth; }
-body { @apply bg-white text-slate-800 font-sans antialiased; }
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply bg-cream-50 text-navy-900 font-sans antialiased;
+  background-image: radial-gradient(
+      ellipse 80% 60% at 50% -10%,
+      rgba(251, 191, 36, 0.08),
+      transparent
+    ),
+    radial-gradient(ellipse 60% 40% at 100% 100%, rgba(10, 26, 58, 0.04), transparent);
+}
+
+.dark body {
+  @apply bg-midnight-950 text-slate-200;
+  background-image: radial-gradient(
+      ellipse 70% 50% at 50% -10%,
+      rgba(251, 191, 36, 0.12),
+      transparent
+    ),
+    radial-gradient(ellipse 60% 50% at 90% 100%, rgba(30, 42, 92, 0.4), transparent);
+}
+
+/* Smooth theme crossfade — only on surface props, not on transforms */
+body,
+header,
+section,
+footer,
+article,
+aside,
+input,
+textarea,
+select,
+button {
+  transition-property: background-color, border-color, color, box-shadow;
+  transition-duration: 300ms;
+  transition-timing-function: ease;
+}
+
+/* Subtle gold shimmer for the pulsating CTA */
+@keyframes gold-glow {
+  0%, 100% {
+    box-shadow: 0 10px 30px -8px rgba(245, 158, 11, 0.5),
+      0 0 0 0 rgba(251, 191, 36, 0.5);
+  }
+  50% {
+    box-shadow: 0 20px 50px -12px rgba(245, 158, 11, 0.7),
+      0 0 0 10px rgba(251, 191, 36, 0);
+  }
+}
+.animate-gold-glow {
+  animation: gold-glow 2.4s ease-in-out infinite;
+}
+
+/* Honour reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}

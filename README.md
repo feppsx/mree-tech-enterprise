@@ -2,48 +2,80 @@
 
 **ONE CALL, WE DO IT ALL!**
 
-React (Vite) + Tailwind CSS v4 + Supabase + Vercel.
+React (Vite) + Tailwind CSS v4 + Framer Motion + Supabase + Vercel.
 
-The project is already written for you — components, Supabase client, SQL,
-Vercel config and all. You just need to install it, add your Supabase keys
-and run it.
+Premium gold/midnight-navy palette · dark & light mode · 3D card tilt ·
+scroll reveals · pulsating CTA · animated form success.
 
 ---
 
 ## Quick start (do these in order)
 
 ```powershell
-# 1. Open PowerShell in this folder
 cd $HOME\Desktop\M.Ree
 
-# 2. Install everything
+# 1. Install everything
 npm install
 
-# 3. Copy the environment file (then open it and paste in your Supabase keys)
+# 2. Copy and fill in your Supabase keys
 copy .env.example .env.local
 notepad .env.local
 
-# 4. Start the dev server
+# 3. Start the dev server
 npm run dev
 ```
 
-Open the address it shows (usually http://localhost:5173). You should see
-the full landing page.
+Open the address it shows (usually http://localhost:5173).
 
 > You need **Node.js 20 or newer**. Check with `node -v`. If missing:
 > install the LTS version from https://nodejs.org and reopen PowerShell.
 
 ---
 
-## Progress
+## What's new in this version
 
-| Part | Status |
+| Feature | Where |
 |---|---|
-| Project setup (package.json, Vite config, Tailwind, index.html) | ✅ Done |
-| Supabase table (`supabase/schema.sql`) | ✅ Done |
-| Supabase client (`src/lib/supabaseClient.js`) | ✅ Done |
-| Page components (Navbar, Hero, Services, Why Us, Contact, Footer) | ✅ Done |
-| Vercel config (`vercel.json`) | ✅ Done |
+| **Dark / Light mode toggle** | Sun/Moon button in the navbar. Remembers your choice (`localStorage`), respects system preference on first visit, no flash on load. |
+| **Framer Motion** | Smooth staggered scroll reveals, floating hero card, pulsating "Request a Quote" button, animated navbar entrance, mobile drawer animation, animated success state. |
+| **3D card tilt** | Service cards tilt based on where your mouse is, with content lifted on Z for a real-depth feel. |
+| **Premium colours** | Rich gold gradients (`gold-300 → gold-600`), deep midnight navy in dark mode. CSS tokens defined in `src/index.css` under `@theme`. |
+| **Scroll-progress bar** | Thin gold bar at the very top that tracks page scroll. |
+
+---
+
+## Project files
+
+```
+M.Ree/
+├── README.md                       ← this file
+├── package.json                    ← includes framer-motion
+├── vite.config.js
+├── vercel.json
+├── index.html                      ← has no-flash theme bootstrap
+├── .env.example
+├── .gitignore
+├── public/
+│   └── favicon.svg
+├── supabase/
+│   └── schema.sql                  ← run in Supabase SQL Editor
+└── src/
+    ├── main.jsx
+    ├── App.jsx                     ← scroll progress + layout
+    ├── index.css                   ← Tailwind + custom-variant dark + tokens
+    ├── hooks/
+    │   └── useTheme.js             ← theme hook with localStorage sync
+    ├── lib/
+    │   └── supabaseClient.js       ← Supabase connection + submitLead()
+    └── components/
+        ├── Navbar.jsx              ← includes <ThemeToggle />
+        ├── ThemeToggle.jsx         ← animated sun/moon button
+        ├── Hero.jsx                ← pulsating CTA, floating card
+        ├── Services.jsx            ← 3D tilt cards
+        ├── WhyChooseUs.jsx         ← staggered scroll reveals
+        ├── ContactForm.jsx         ← animated success + loading
+        └── Footer.jsx
+```
 
 ---
 
@@ -54,40 +86,35 @@ cd $HOME\Desktop\M.Ree
 npm install
 ```
 
-This installs React, Vite, Tailwind v4, Supabase and lucide-react icons.
+Installs React, Vite, Tailwind v4, Supabase, **framer-motion** and lucide-react.
 
 ---
 
 ## Step 2 — Create the Supabase table
 
-1. Go to https://supabase.com/dashboard and click **New project**. Pick a
-   name (e.g. `mree-website`), set a database password and choose the
-   **Southeast Asia (Singapore)** region. Wait ~2 minutes for it to finish.
-2. In the left menu open **SQL Editor → New query**.
-3. Open `supabase/schema.sql` in this folder, copy **all** of it, paste it
-   in and click **Run**.
+1. Go to https://supabase.com/dashboard → **New project**. Pick a name,
+   set a database password, choose **Southeast Asia (Singapore)**.
+   Wait ~2 minutes.
+2. Left menu → **SQL Editor → New query**.
+3. Open `supabase/schema.sql`, copy **all** of it, paste it in, click **Run**.
 4. You should see **"Success. No rows returned."**
-5. Open **Table Editor** in the left menu. You should see a table called
-   **`leads`**.
+5. **Table Editor** → you should see a **`leads`** table.
 
-**What this table does:**
-- Stores every quote request: name, phone, email (optional), service,
-  message (optional) and status.
-- Status starts as `new`. In the Table Editor you can change it to
-  `contacted`, `quoted`, `won` or `lost` to track jobs.
-- It is **locked down**: the public website can only *add* leads.
-  Nobody can read, edit or delete them through the website — only you,
-  through the Supabase dashboard.
+**What the table does:**
+- Stores every quote request: name, phone, email, service, message, status.
+- Status starts as `new`. You can change it to `contacted`, `quoted`,
+  `won` or `lost` from the Table Editor.
+- **Locked down**: the website can only *add* leads. Nobody can read,
+  edit or delete through the public key — only you, in Supabase.
 
 ---
 
 ## Step 3 — Add your Supabase keys
 
-1. In Supabase go to **Project Settings → API** (or **API Keys**) and copy:
-   - **Project URL** (e.g. `https://abcdefgh.supabase.co`)
-   - **anon public** key, or the **publishable** key (`sb_publishable_...`).
-     Either one works.
-2. In PowerShell (still in this folder):
+1. Supabase → **Project Settings → API** (or **API Keys**). Copy:
+   - **Project URL** (`https://xxxxx.supabase.co`)
+   - **anon public** key *or* **publishable** key (`sb_publishable_...`)
+2. In PowerShell:
 
    ```powershell
    copy .env.example .env.local
@@ -97,12 +124,12 @@ This installs React, Vite, Tailwind v4, Supabase and lucide-react icons.
 3. Paste in your values and save:
 
    ```
-   VITE_SUPABASE_URL=https://abcdefgh.supabase.co
+   VITE_SUPABASE_URL=https://xxxxx.supabase.co
    VITE_SUPABASE_ANON_KEY=paste-your-key-here
    ```
 
-> 🔒 **Never** use the `service_role` / `secret` key in this project.
-> `.env.local` is already in `.gitignore`, so it won't be uploaded to GitHub.
+> 🔒 **Never** use the `service_role` key here. `.env.local` is already in
+> `.gitignore` so it won't be uploaded to GitHub.
 
 ---
 
@@ -112,10 +139,15 @@ This installs React, Vite, Tailwind v4, Supabase and lucide-react icons.
 npm run dev
 ```
 
-Open http://localhost:5173. Try sending a test lead through the form.
-Then check Supabase **Table Editor → leads** — your test should appear.
+Open http://localhost:5173.
 
-Press `Ctrl + C` in PowerShell to stop the server.
+- Try the **sun/moon toggle** in the top-right — the whole site switches theme.
+- Hover a **service card** — it tilts in 3D.
+- Scroll down — sections fade in with staggered reveals.
+- **Submit the form** — you'll see a loading spinner, then an animated
+  checkmark on success. Check Supabase **Table Editor → leads**.
+
+Press `Ctrl + C` to stop the server.
 
 ---
 
@@ -126,89 +158,70 @@ Press `Ctrl + C` in PowerShell to stop the server.
 ```powershell
 git init
 git add .
-git commit -m "Initial commit: M.REE TECH landing page"
+git commit -m "M.REE TECH landing page: premium theme, framer motion, dark mode"
 ```
 
-Create a new empty repo on https://github.com/new (e.g. `mree-tech-landing`),
-then run the two commands GitHub shows under **"…or push an existing
-repository"**. They look like:
+Create an empty repo at https://github.com/new (e.g. `mree-tech-enterprise`).
+Then push:
 
 ```powershell
-git remote add origin https://github.com/YOUR-USERNAME/mree-tech-landing.git
+git remote add origin https://github.com/YOUR-USERNAME/mree-tech-enterprise.git
 git branch -M main
 git push -u origin main
 ```
 
+> **Push rejected with 403?** Your Git is signed in as a different GitHub
+> account from the one that owns the repo. Either create the repo under
+> **your own** GitHub user, or ask the repo owner to add you as a
+> collaborator with Write access, then push again.
+
 ### 5b. Deploy on Vercel
 
-1. Go to https://vercel.com and sign in with GitHub.
-2. Click **Add New… → Project**.
-3. Pick your `mree-tech-landing` repo and click **Import**.
-4. Vercel detects **Vite** automatically. Leave all defaults.
+1. Go to https://vercel.com, sign in with GitHub.
+2. **Add New… → Project**.
+3. Pick your repo → **Import**.
+4. Vercel detects **Vite** automatically.
 5. Open **Environment Variables** and add both:
    - `VITE_SUPABASE_URL` = your Supabase project URL
    - `VITE_SUPABASE_ANON_KEY` = your anon/publishable key
 
-   Make sure both are ticked for **Production, Preview and Development**.
-6. Click **Deploy**. ~1 minute later your site is live at a
-   `*.vercel.app` URL.
+   Tick **Production, Preview and Development** for both.
+6. **Deploy**. ~1 minute later your site is live.
 
 ### 5c. Updating later
 
-Any `git push` to `main` auto-deploys. For environment variable changes,
-update them in **Vercel → Project → Settings → Environment Variables**,
-then **Deployments → … → Redeploy**.
+Any `git push origin main` auto-deploys. For env var changes, update
+them in **Vercel → Settings → Environment Variables**, then
+**Deployments → … → Redeploy**.
 
 ### 5d. Custom domain (optional)
 
-In Vercel: **Project → Settings → Domains**. Add your domain and follow
-the DNS instructions Vercel shows. HTTPS is automatic.
-
----
-
-## Project files
-
-```
-M.Ree/
-├── README.md                       ← this file
-├── package.json
-├── vite.config.js
-├── vercel.json                     ← for Vercel deployment
-├── index.html
-├── .env.example                    ← template
-├── .env.local                      ← YOUR keys (you create in Step 3)
-├── .gitignore
-├── public/
-│   └── favicon.svg
-├── supabase/
-│   └── schema.sql                  ← run in Supabase SQL Editor
-└── src/
-    ├── main.jsx                    ← entry point
-    ├── App.jsx                     ← page layout
-    ├── index.css                   ← Tailwind + brand colours
-    ├── lib/
-    │   └── supabaseClient.js       ← Supabase connection + submitLead()
-    └── components/
-        ├── Navbar.jsx
-        ├── Hero.jsx
-        ├── Services.jsx            ← 7 services grid
-        ├── WhyChooseUs.jsx
-        ├── ContactForm.jsx         ← writes to Supabase
-        └── Footer.jsx
-```
+**Vercel → Project → Settings → Domains**. HTTPS is automatic.
 
 ---
 
 ## Design notes
 
-- **Colours:** navy `#0a1a3a` with brand yellow/orange `#f9a613`.
-  Defined as CSS variables in `src/index.css`, used as Tailwind
-  classes like `bg-navy-900` and `text-brand-500`.
-- **Fonts:** Inter for body, Montserrat for display headings
-  (loaded from Google Fonts in `index.html`).
+- **Palette (CSS tokens in `src/index.css`):**
+  - Dark mode canvas: `midnight-950 #020617` → `midnight-800 #0a1428`
+  - Light mode canvas: `cream-50 #fffdf7`
+  - Brand navy: `navy-900 #0a1a3a`
+  - Accent gold: `gold-400 #fbbf24` → `gold-600 #d97706`
+- **Fonts:** Inter for body, Montserrat for display headings (Google Fonts).
 - **Icons:** `lucide-react`.
-- **Responsive:** mobile-first. Mobile has a hamburger menu;
-  desktop shows the full nav.
+- **Animations:** `framer-motion` — all effects honour
+  `prefers-reduced-motion`.
+
+### Tweaking the design
+
+- To change gold → different accent: edit the `--color-gold-*` tokens in
+  `src/index.css`.
+- To make the 3D tilt stronger: in `src/components/Services.jsx`, change
+  `useTransform(my, [-0.5, 0.5], [8, -8])` to `[12, -12]` or higher.
+- To make the hero CTA pulse faster: in `src/index.css`, change the
+  `gold-glow` animation duration (currently `2.4s`).
+- To force dark mode as default: in `src/hooks/useTheme.js`, change
+  `getInitialTheme` to always return `'dark'`.
 
 ---
 
@@ -216,14 +229,15 @@ M.Ree/
 
 | Problem | Fix |
 |---|---|
-| `npm` is not recognized | Install Node.js from https://nodejs.org, close and reopen PowerShell. |
-| PowerShell says "running scripts is disabled" | Run `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned`, answer `Y`. |
-| Browser console: "Missing Supabase env vars" | Check `.env.local` exists and both values are filled. Stop and restart `npm run dev`. |
-| Form says "Something went wrong" | Open browser DevTools → Console. The real error is logged. Usually: wrong keys, SQL script not run, or RLS policy missing. |
-| Form submits but no row in Supabase | You're probably using an old Supabase project where RLS silently blocks. Re-run `supabase/schema.sql`. |
-| SQL error "relation already exists" | Safe to ignore. Table already there. |
-| `Uncaught ReferenceError: React is not defined` | The React plugin didn't run. Make sure `@vitejs/plugin-react` is installed (it's in `package.json`), delete `node_modules` + `package-lock.json`, run `npm install` again, then restart `npm run dev`. Every `.jsx` file now also has `import React from 'react'` as a safety net. |
+| `npm` is not recognized | Install Node.js from https://nodejs.org, reopen PowerShell. |
+| PowerShell: "running scripts is disabled" | `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned`, answer `Y`. |
+| Browser console: "Missing Supabase env vars" | Fill `.env.local`, then restart `npm run dev`. |
+| Theme toggle doesn't work | Delete `localStorage` for the site in DevTools → Application → Local Storage, then reload. |
+| Flash of wrong theme on load | Check `index.html` still has the `<script>` under the `<title>` — that's what prevents it. |
+| `Uncaught ReferenceError: React is not defined` | `Remove-Item -Recurse -Force node_modules, package-lock.json, .vite`, then `npm install`, `npm run dev`. |
+| Form says "Something went wrong" | Open DevTools → Console. Usually: wrong keys, SQL script not run, or RLS policy missing. |
 | Vercel build fails | Check Build Logs. 99% of the time: forgot to add `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` in Vercel Environment Variables. |
+| `git push` → 403 denied | Your Git is signed in as a GitHub user who doesn't own this repo. See Step 5a. |
 
 ---
 
