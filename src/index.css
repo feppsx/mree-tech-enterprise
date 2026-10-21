@@ -1,0 +1,21 @@
+@import "tailwindcss";
+
+/* M.REE brand tokens — use as bg-navy-900, text-brand-500, etc. */
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Montserrat", "Inter", ui-sans-serif, sans-serif;
+
+  --color-navy-950: #050d1f;
+  --color-navy-900: #0a1a3a;
+  --color-navy-800: #0f2552;
+  --color-navy-700: #163370;
+  --color-navy-600: #1e4494;
+
+  --color-brand-300: #ffd166;
+  --color-brand-400: #ffbe2e;
+  --color-brand-500: #f9a613;
+  --color-brand-600: #f08a00;
+}
+
+html { scroll-behavior: smooth; }
+body { @apply bg-white text-slate-800 font-sans antialiased; }
